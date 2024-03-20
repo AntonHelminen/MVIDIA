@@ -9,8 +9,17 @@ from rtmlib import Wholebody, draw_skeleton
 
 def main():
 
-    root = './training'
+    root = '/home/veikka/Documents/Misc/Data/training'
     #root = './small_training'
+
+    device = 'cuda'  # cpu, cuda
+    backend = 'onnxruntime'  # opencv, onnxruntime, openvino
+    
+    openpose_skeleton = False  # True for openpose-style, False for mmpose-style
+    
+    wholebody = Wholebody(to_openpose=openpose_skeleton,
+                      mode='balanced',  # 'performance', 'lightweight', 'balanced'. Default: 'balanced'
+                      backend=backend, device=device)
 
     if os.path. exists("training.txt"):
         os. remove("training.txt")
@@ -35,13 +44,12 @@ def main():
             ns = sorted(ns, key=lambda x: int(x[0]))
             n, ftype = ns[len(ns) // 2]
             image = cv.imread(f'{root}/{label}/{idee}.{n}.{ftype}')
-            keypoints = skeleton(image)
+            keypoints = skeleton(image, wholebody)
             x = keypoints[:,0]
             y = keypoints[:,1]
             for i in range(len(x)):
                 savefile.write(f'{x[i]};{y[i]};')
             savefile.write(f'{label}\n')
-            print(label)
             #plt.plot(x,y,'k.')
             #plt.show()
             # print(f'{label}, {idee}, {n}')
@@ -55,17 +63,9 @@ def main():
 
     return 0
 
-def skeleton(img):
-    device = 'cuda'  # cpu, cuda
-    backend = 'onnxruntime'  # opencv, onnxruntime, openvino
+def skeleton(img, wholebody):
 
-    openpose_skeleton = False  # True for openpose-style, False for mmpose-style
-
-    wholebody = Wholebody(to_openpose=openpose_skeleton,
-                      mode='balanced',  # 'performance', 'lightweight', 'balanced'. Default: 'balanced'
-                      backend=backend, device=device)
-
-    keypoints, scores = wholebody(img)
+    keypoints, _ = wholebody(img)
 
     # if you want to use black background instead of original image,
     # img_show = np.zeros(img_show.shape, dtype=np.uint8)
