@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import time
 from rtmlib import Wholebody, draw_skeleton
-import pygame
 
 
 def main():
