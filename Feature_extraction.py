@@ -5,11 +5,23 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import time
 from rtmlib import Wholebody, draw_skeleton
+import pygame
+
 
 def main():
 
+    pygame.init()
+    pygame.mixer.init()
+    sound = pygame.mixer.Sound('sp.mp3')
+    sound.set_volume(0.1)
+
     root = './training'
-    dst = './processed'
+    #root = './small_training'
+
+    if os.path. exists("training.txt"):
+        os. remove("training.txt")
+
+    savefile = open("training.txt", "a", encoding="utf-8")
     labels = sorted(os.listdir(root), key=int)
     print(*labels)
 
@@ -32,18 +44,27 @@ def main():
             keypoints = skeleton(image)
             x = keypoints[:,0]
             y = keypoints[:,1]
-        
+            for i in range(len(x)):
+                savefile.write(f'{x[i]};{y[i]};')
+            savefile.write(f'{label}\n')
+            print(label)
             #plt.plot(x,y,'k.')
             #plt.show()
             # print(f'{label}, {idee}, {n}')
             # cv.imshow("im",image)
             # cv.waitKey(0)
 
+
+    savefile.close()
+    sound.play()
+    time.sleep(27)
+    
     print("Kiitos ohjelman käytöstä.")
+
     return 0
 
 def skeleton(img):
-    device = 'cpu'  # cpu, cuda
+    device = 'cuda'  # cpu, cuda
     backend = 'onnxruntime'  # opencv, onnxruntime, openvino
 
     openpose_skeleton = False  # True for openpose-style, False for mmpose-style
