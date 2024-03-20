@@ -9,11 +9,6 @@ from rtmlib import Wholebody, draw_skeleton
 
 def main():
 
-    pygame.init()
-    pygame.mixer.init()
-    sound = pygame.mixer.Sound('sp.mp3')
-    sound.set_volume(0.1)
-
     root = './training'
     #root = './small_training'
 
@@ -55,8 +50,6 @@ def main():
 
 
     savefile.close()
-    sound.play()
-    time.sleep(27)
     
     print("Kiitos ohjelman käytöstä.")
 
