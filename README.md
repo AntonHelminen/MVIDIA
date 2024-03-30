@@ -1,5 +1,3 @@
-# MVIDIA
+# MVIDIA practical assignment
 
-MVIDIA practical assignment
-
-See `main.ipynb` for small demo.
+The usage of the model documented in `main.ipynb`
